@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label"
 
 export function LoginForm() {
   return (
-    <Card className="mx-auto  px-5 ">
+    <Card className="mx-auto  px-7">
       
       <CardHeader>
         <Image
@@ -28,7 +28,7 @@ export function LoginForm() {
           height={37}
           priority
         ></Image>
-        <CardDescription className="font-bold	text-black pb-3 mx-1">
+        <CardDescription className="text-center font-bold	text-black pb-3 mx-auto  ">
           Plataforma de simulados do cursinho popular da EACH-USP
         </CardDescription>
       </CardHeader>
