@@ -31,17 +31,17 @@ export function TestsHistory() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Customer</TableHead>
+                <TableHead>Título</TableHead>
                 <TableHead className="hidden sm:table-cell">
-                  Type
+                  Nro de Questões
                 </TableHead>
                 <TableHead className="hidden sm:table-cell">
                   Status
                 </TableHead>
                 <TableHead className="hidden md:table-cell">
-                  Date
+                  Data
                 </TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right">Resultado</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -194,7 +194,8 @@ export default function Dashboard() {
               <TestsHistory></TestsHistory>
             </TabsContent>
             <TabsContent value="evolution">
-            <ChartBar></ChartBar>
+            <ChartBar 
+            ></ChartBar>
             </TabsContent>
             <TabsContent value="statistics">
               Estatísticas

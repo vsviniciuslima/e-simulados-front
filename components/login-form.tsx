@@ -21,11 +21,11 @@ export function LoginForm() {
       
       <CardHeader>
         <Image
-          className=" mx-auto "
-          src="/usp-logo.png"
+          className=" mx-auto py-5"
+          src="/cursinho-logo.webp"
           alt="Next.js Logo"
           width={180}
-          height={37}
+          height={40}
           priority
         ></Image>
         <CardDescription className="text-center font-bold	text-black pb-3 mx-auto  ">
@@ -55,7 +55,7 @@ export function LoginForm() {
           Esqueceu sua senha? 
 
               </Link></p>
-          <Button variant="ghost" type="submit" className="text-white font-medium w-full bg-orange-500 hover:bg-transparent hover:border-transparent hover:shadow-none  !important">
+          <Button variant="ghost" type="submit" className="text-white font-medium w-full bg-black hover:bg-transparent hover:border-transparent hover:shadow-none  !important">
             Login
           </Button>
           <Button variant="outline" className="w-full">

@@ -38,14 +38,16 @@ const chartConfig = {
 
 export function ChartBar() {
   return (
-    <Card>
+    <Card             
+    >
       <CardHeader>
-        <CardTitle>Bar Chart - Label</CardTitle>
+        <CardTitle>Quantidade de Simulados</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
+      <CardContent >
+        <ChartContainer config={chartConfig} style={{ width: "100%", height: "50%" }}>
           <BarChart
+            style={{ width: "100%", height: "800px" }}
             accessibilityLayer
             data={chartData}
             margin={{
@@ -69,20 +71,13 @@ export function ChartBar() {
                 position="top"
                 offset={12}
                 className="fill-foreground"
-                fontSize={12}
+                fontSize={15}
               />
             </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
+
     </Card>
   )
 }
