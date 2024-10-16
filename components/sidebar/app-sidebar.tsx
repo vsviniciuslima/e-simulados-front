@@ -18,6 +18,7 @@ import {
   SquareTerminal,
   Star,
   Turtle,
+  CircleHelp,
 } from "lucide-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
@@ -37,7 +38,7 @@ import {
 const data = {
   teams: [
     {
-      name: "Acme Inc",
+      name: "Cursinho da EACH",
       logo: Atom,
       plan: "Enterprise",
     },
@@ -53,131 +54,55 @@ const data = {
     },
   ],
   user: {
-    name: "shadcn",
+    name: "Professor X",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Simulados",
+      url: "/dashboard/simulados",
+      icon: BookOpen,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Criar simulado",
           url: "#",
           icon: History,
           description: "View your recent prompts",
         },
         {
-          title: "Starred",
-          url: "#",
-          icon: Star,
-          description: "Browse your starred prompts",
-        },
-        {
-          title: "Settings",
-          url: "#",
-          icon: Settings2,
-          description: "Configure your playground",
+          title: "Meus simulados",
+          url: "/dashboard/simulados/meus-simulados",
+          icon: History,
+          description: "View your recent prompts",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Questões",
       url: "#",
-      icon: Bot,
+      icon: CircleHelp,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Criar questão",
+          url: "/dashboard/questoes/criar",
           icon: Rabbit,
           description: "Our fastest model for general use cases.",
         },
-        {
-          title: "Explorer",
-          url: "#",
-          icon: Bird,
-          description: "Performance and speed for efficiency.",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-          icon: Turtle,
-          description: "The most powerful model for complex computations.",
-        },
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API",
-      url: "#",
-      icon: Code2,
-      items: [
-        {
-          title: "Chat",
-          url: "#",
-        },
-        {
-          title: "Completion",
-          url: "#",
-        },
-        {
-          title: "Images",
-          url: "#",
-        },
-        {
-          title: "Video",
-          url: "#",
-        },
-        {
-          title: "Speech",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
+      title: "Preferências",
       url: "#",
       icon: Settings2,
       items: [
         {
-          title: "General",
+          title: "Geral",
           url: "#",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
+          title: "Time",
           url: "#",
         },
       ],
@@ -186,7 +111,7 @@ const data = {
 
   navSecondary: [
     {
-      title: "Support",
+      title: "Suporte",
       url: "#",
       icon: LifeBuoy,
     },
@@ -255,19 +180,16 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarItem>
-          <SidebarLabel>Platform</SidebarLabel>
+          <SidebarLabel>Plataforma</SidebarLabel>
           <NavMain items={data.navMain} searchResults={data.searchResults} />
         </SidebarItem>
         <SidebarItem>
-          <SidebarLabel>Projects</SidebarLabel>
+          <SidebarLabel>Projetos</SidebarLabel>
           <NavProjects projects={data.projects} />
         </SidebarItem>
         <SidebarItem className="mt-auto">
-          <SidebarLabel>Help</SidebarLabel>
+          <SidebarLabel>Ajuda</SidebarLabel>
           <NavSecondary items={data.navSecondary} />
-        </SidebarItem>
-        <SidebarItem>
-          <StorageCard />
         </SidebarItem>
       </SidebarContent>
       <SidebarFooter>

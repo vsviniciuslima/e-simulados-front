@@ -1,25 +1,25 @@
-import Link from "next/link"
-import { MoreHorizontal, PlusSquare, type LucideIcon } from "lucide-react"
+import Link from "next/link";
+import { MoreHorizontal, PlusSquare, type LucideIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 export function NavProjects({
   projects,
   className,
 }: {
   projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
+    name: string;
+    url: string;
+    icon: LucideIcon;
+  }[];
 } & React.ComponentProps<"ul">) {
   return (
     <ul className={cn("grid gap-0.5", className)}>
@@ -60,10 +60,10 @@ export function NavProjects({
         <button className="flex h-7 w-full items-center gap-2.5 overflow-hidden rounded-md px-1.5 text-left text-xs ring-ring transition-all hover:bg-muted focus-visible:outline-none focus-visible:ring-2">
           <PlusSquare className="h-4 w-4 shrink-0 translate-x-0.5 text-muted-foreground" />
           <div className="line-clamp-1 overflow-hidden font-medium text-muted-foreground">
-            Add Project
+            Novo Projeto
           </div>
         </button>
       </li>
     </ul>
-  )
+  );
 }
