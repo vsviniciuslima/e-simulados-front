@@ -21,11 +21,6 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, TrashIcon } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-export type Alternative = {
-  label: string;
-  text?: string;
-};
-
 export default function AlternativesCard() {
   const defaultAlternatives: Alternative[] = [
     { label: "A" },
