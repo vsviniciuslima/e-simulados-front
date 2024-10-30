@@ -1,60 +1,36 @@
 "use client";
 
+import * as React from "react";
 import {
-  Atom,
-  Bird,
   BookOpen,
   Bot,
-  Code2,
-  Eclipse,
+  Command,
   Frame,
-  History,
   LifeBuoy,
   Map,
   PieChart,
-  Rabbit,
   Send,
   Settings2,
   SquareTerminal,
-  Star,
-  Turtle,
-  CircleHelp,
 } from "lucide-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { NavUser } from "@/components/sidebar/nav-user";
-import { StorageCard } from "@/components/sidebar/storage-card";
-import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarItem,
-  SidebarLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
 const data = {
-  teams: [
-    {
-      name: "Cursinho da EACH",
-      logo: Atom,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: Eclipse,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Rabbit,
-      plan: "Free",
-    },
-  ],
   user: {
-    name: "Professor X",
+    name: "shadcn",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
@@ -63,55 +39,33 @@ const data = {
       title: "Simulados",
       url: "/dashboard/simulados",
       icon: BookOpen,
-      isActive: true,
       items: [
-        {
-          title: "Criar simulado",
-          url: "#",
-          icon: History,
-          description: "View your recent prompts",
-        },
         {
           title: "Meus simulados",
           url: "/dashboard/simulados/meus-simulados",
-          icon: History,
-          description: "View your recent prompts",
         },
       ],
     },
     {
       title: "Questões",
-      url: "#",
-      icon: CircleHelp,
+      url: "/dashboard/questoes",
+      icon: Bot,
       items: [
         {
           title: "Criar questão",
           url: "/dashboard/questoes/criar",
-          icon: Rabbit,
-          description: "Our fastest model for general use cases.",
         },
       ],
     },
     {
-      title: "Preferências",
-      url: "#",
+      title: "Ajustes",
+      url: "/dashboard/ajustes",
       icon: Settings2,
-      items: [
-        {
-          title: "Geral",
-          url: "#",
-        },
-        {
-          title: "Time",
-          url: "#",
-        },
-      ],
     },
   ],
-
   navSecondary: [
     {
-      title: "Suporte",
+      title: "Support",
       url: "#",
       icon: LifeBuoy,
     },
@@ -123,74 +77,47 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Fuvest",
       url: "#",
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
+      name: "Comvest",
       url: "#",
       icon: PieChart,
     },
     {
-      name: "Travel",
+      name: "Vunesp",
       url: "#",
       icon: Map,
     },
   ],
-  searchResults: [
-    {
-      title: "Routing Fundamentals",
-      teaser:
-        "The skeleton of every application is routing. This page will introduce you to the fundamental concepts of routing for the web and how to handle routing in Next.js.",
-      url: "#",
-    },
-    {
-      title: "Layouts and Templates",
-      teaser:
-        "The special files layout.js and template.js allow you to create UI that is shared between routes. This page will guide you through how and when to use these special files.",
-      url: "#",
-    },
-    {
-      title: "Data Fetching, Caching, and Revalidating",
-      teaser:
-        "Data fetching is a core part of any application. This page goes through how you can fetch, cache, and revalidate data in React and Next.js.",
-      url: "#",
-    },
-    {
-      title: "Server and Client Composition Patterns",
-      teaser:
-        "When building React applications, you will need to consider what parts of your application should be rendered on the server or the client. ",
-      url: "#",
-    },
-    {
-      title: "Server Actions and Mutations",
-      teaser:
-        "Server Actions are asynchronous functions that are executed on the server. They can be used in Server and Client Components to handle form submissions and data mutations in Next.js applications.",
-      url: "#",
-    },
-  ],
 };
 
-export function AppSidebar() {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar>
+    <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="#">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Command className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">Acme Inc</span>
+                  <span className="truncate text-xs">Enterprise</span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarItem>
-          <SidebarLabel>Plataforma</SidebarLabel>
-          <NavMain items={data.navMain} searchResults={data.searchResults} />
-        </SidebarItem>
-        <SidebarItem>
-          <SidebarLabel>Projetos</SidebarLabel>
-          <NavProjects projects={data.projects} />
-        </SidebarItem>
-        <SidebarItem className="mt-auto">
-          <SidebarLabel>Ajuda</SidebarLabel>
-          <NavSecondary items={data.navSecondary} />
-        </SidebarItem>
+        <NavMain items={data.navMain} />
+        <NavProjects projects={data.projects} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

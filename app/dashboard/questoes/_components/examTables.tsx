@@ -18,79 +18,85 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MoreHorizontal } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "./data-table";
 
-export interface ExamTableProps {
-  examName: string;
-  examType: string;
+export type Question = {
+  title: string;
+  category: string;
+  author: string;
   date: string;
-  score: string;
-}
+};
 
-const exams: ExamTableProps[] = [
+export const questions: Question[] = [
   {
-    examName: "FUVEST 2024",
-    examType: "FUVEST",
-    date: "10/10/2021 às 13:00",
-    score: "73/10",
+    title: "FUVEST 2024",
+    category: "História",
+    author: "Cursinho da FFLCH",
+    date: "12/12/2023",
   },
   {
-    examName: "FUVEST 2023",
-    examType: "FUVEST",
-    date: "10/10/2021 às 13:00",
-    score: "72/90",
+    title: "FUVEST 2023",
+    category: "Português",
+    author: "Cursinho da EACH",
+    date: "12/12/2023",
   },
   {
-    examName: "FUVEST 2022",
-    examType: "FUVEST",
-    date: "10/10/2021 às 13:00",
-    score: "68/90",
+    title: "FUVEST 2022",
+    category: "Matemática",
+    author: "Cursinho da FEA",
+    date: "12/12/2023",
   },
   {
-    examName: "UNICAMP 2024",
-    examType: "UNICAMP",
-    date: "10/10/2021 às 13:00",
-    score: "68/90",
+    title: "UNICAMP 2024",
+    category: "Dinâmica",
+    author: "João Pedro Reis",
+    date: "12/12/2023",
   },
   {
-    examName: "UNICAMP 2023",
-    examType: "UNICAMP",
-    date: "10/10/2021 às 13:00",
-    score: "68/90",
+    title: "UNICAMP 2023",
+    category: "Literatura",
+    author: "Cursinho da Poli",
+    date: "12/12/2023",
+  },
+];
+
+export const columns: ColumnDef<Question>[] = [
+  {
+    accessorKey: "title",
+    header: "Título",
+  },
+  {
+    accessorKey: "category",
+    header: "Categoria",
+  },
+  {
+    accessorKey: "author",
+    header: "Autor",
+  },
+  {
+    accessorKey: "date",
+    header: "Data",
   },
 ];
 
 export function ExamsTable() {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Simulado</TableHead>
-          <TableHead className="hidden sm:table-cell">Tipo</TableHead>
-          <TableHead className="hidden md:table-cell">Data</TableHead>
-          <TableHead className="hidden md:table-cell">Acertos</TableHead>
-          <TableHead className="hidden md:table-cell">Ações</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {exams.slice(0, 6).map((exam: ExamTableProps) => renderExamRow(exam))}
-      </TableBody>
-    </Table>
-  );
+  return <DataTable columns={columns} data={questions} />;
 }
 
-const renderExamRow = ({ examName, examType, date, score }: ExamTableProps) => (
+const renderExamRow = ({ title, category, date, author }: Question) => (
   <TableRow>
     <TableCell>
-      <div className="font-medium">{examName}</div>
+      <div className="font-medium">{title}</div>
     </TableCell>
 
     <TableCell className="hidden sm:table-cell">
       <Badge className="text-xs" variant="secondary">
-        {examType}
+        {category}
       </Badge>
     </TableCell>
+    <TableCell className="hidden md:table-cell font-bold">{author}</TableCell>
     <TableCell className="hidden md:table-cell">{date}</TableCell>
-    <TableCell className="hidden md:table-cell">{score}</TableCell>
     <TableCell>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -100,9 +106,10 @@ const renderExamRow = ({ examName, examType, date, score }: ExamTableProps) => (
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Delete</DropdownMenuItem>
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+          <DropdownMenuItem>Ver questão</DropdownMenuItem>
+          <DropdownMenuItem>Adicionar a um simulado</DropdownMenuItem>
+          <DropdownMenuItem>Compartilhar</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </TableCell>

@@ -3,7 +3,12 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { SidebarLayout, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { Breadcrumbs } from "@/components/sidebar/breadcrumb";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,17 +26,18 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SidebarLayout
+        <SidebarProvider
           defaultOpen={cookies().get("sidebar:state")?.value === "true"}
         >
           <AppSidebar />
-          <main className="flex flex-1 flex-col p-2 transition-all duration-300 ease-in-out">
-            <div className="h-full rounded-md border-2 border-dashed p-2">
+          <SidebarInset>
+            <main className="p-2 transition-all duration-300 ease-in-out">
               <SidebarTrigger />
+
               {children}
-            </div>
-          </main>
-        </SidebarLayout>
+            </main>
+          </SidebarInset>
+        </SidebarProvider>
       </body>
     </html>
   );
