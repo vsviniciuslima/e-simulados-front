@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Metadata } from "next";
-import { ExamsTable } from "./_components/examTables";
 import { DataTableDemo } from "./_components/demoDataTable";
 
 export const metadata: Metadata = {
