@@ -6,7 +6,7 @@ const QuestionDifficulty = z.enum(["EASY", "MEDIUM", "HARD"]);
 // Schema for CreateQuestionAlternativeDTO
 const CreateQuestionAlternativeSchema = z.object({
   imageUrls: z.array(z.string()).optional(), // Optional array of image URLs
-  label: z.string().optional(), // Content is required
+  label: z.string().min(1), // Content is required
   text: z.string().min(1, { message: "O texto da alternativa é obrigatório." }), // Content is required
   correct: z.boolean().optional(), // Correctness flag
 });
