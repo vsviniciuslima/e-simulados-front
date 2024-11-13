@@ -1,7 +1,9 @@
+"use client";
 import Link from "next/link"
 import Image from "next/image";
 
 import { Separator } from "@/components/ui/separator"
+import { signIn } from "next-auth/react" 
 
 import { Button } from "@/components/ui/button"
 import {
@@ -58,7 +60,9 @@ export function LoginForm() {
           <Button variant="ghost" type="submit" className="text-white font-medium w-full bg-black hover:bg-transparent hover:border-transparent hover:shadow-none  !important">
             Login
           </Button>
-          <Button variant="outline" className="w-full">
+          <Button onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            variant="outline"
+            className="w-full">
           <Image
           className=" mx-2"
           src="/google-icon.png"
