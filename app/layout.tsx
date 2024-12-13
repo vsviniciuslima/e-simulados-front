@@ -9,6 +9,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Breadcrumbs } from "@/components/sidebar/breadcrumb";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,10 +32,15 @@ export default async function RootLayout({
         >
           <AppSidebar />
           <SidebarInset>
-            <main className="p-2 transition-all duration-300 ease-in-out">
-              <SidebarTrigger />
-
-              {children}
+            <main className="transition-all duration-300 ease-in-out">
+              <div className="sticky top-0 bg-white z-10 p-2">
+                <div className="flex items-center gap-2">
+                  <SidebarTrigger />
+                  <Breadcrumbs />
+                </div>
+              </div>
+              <div className="p-2">{children}</div>
+              <Toaster />
             </main>
           </SidebarInset>
         </SidebarProvider>

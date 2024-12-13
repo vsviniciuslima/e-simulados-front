@@ -22,7 +22,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -32,20 +31,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { getQuestions } from "@/services/questionsService";
-import { Question } from "@/types/questions";
-import { Plus } from "lucide-react";
-import AddToExamDialog from "./addToExam";
+import { getExams } from "@/services/examService";
+import { Exam } from "@/types/exams";
 import { columns } from "./columns";
-import { CreateExamComponent } from "../../simulados/_components/createExam";
 
-export function QuestionsTable() {
-  const [data, setData] = React.useState<Question[]>([]);
+export function ExamsTable() {
+  const [data, setData] = React.useState<Exam[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    getQuestions()
-      .then((data: Question[]) => {
+    getExams()
+      .then((data: Exam[]) => {
         console.log("buscou os exames", data);
         setData(data);
         setLoading(false);
@@ -59,28 +55,12 @@ export function QuestionsTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const mobileVisibilityState: VisibilityState = {
-    select: true,
-    statement: false,
-    discipline: true,
-    difficulty: true,
-    actions: true,
-  };
-  const desktopVisibilityState: VisibilityState = {
-    select: true,
-    statement: true,
-    discipline: true,
-    difficulty: true,
-    actions: true,
-  };
 
   const isMobile = window.matchMedia("(max-width: 600px)").matches;
 
   console.log("isMobile", isMobile);
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(
-      isMobile ? mobileVisibilityState : desktopVisibilityState
-    );
+    React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
   console.log("columnVisibility", columnVisibility);
@@ -117,30 +97,12 @@ export function QuestionsTable() {
   };
 
   const uniqueDisciplines = Array.from(
-    new Set(data.map((question: Question) => question.discipline.name))
+    new Set(data.map((exam: Exam) => exam.discipline.name))
   );
 
   return (
     <div className="w-full">
       <div className="flex flex-col items-start space-y-2 py-4 lg:flex-row lg:justify-between lg:items-center lg:space-y-0">
-        <Input
-          placeholder="Filtrar questões..."
-          value={
-            (table.getColumn("statement")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("statement")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <div className="flex space-x-2">
-          <AddToExamDialog
-            questions={table.getFilteredSelectedRowModel().rows.map((row) => {
-              return row.original as Question;
-            })}
-          />
-          <CreateExamComponent questions={data} />
-        </div>
         <div className="space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -176,32 +138,6 @@ export function QuestionsTable() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Colunas <ChevronDownIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu> */}
         </div>
       </div>
       <div className="rounded-md border">

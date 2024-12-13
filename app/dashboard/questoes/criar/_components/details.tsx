@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { CreateQuestion } from "../formSchema";
+import { CreateQuestion } from "../../../../../types/questions";
 
 export default function Details() {
   const form = useFormContext<CreateQuestion>();

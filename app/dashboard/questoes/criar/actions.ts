@@ -1,27 +1,28 @@
 "use server";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-import { CreateQuestion, CreateQuestionSchema } from "./formSchema";
+import {
+  CreateQuestion,
+  CreateQuestionSchema,
+} from "../../../../types/questions";
 
 export async function createQuestion(data: CreateQuestion) {
   console.log("Enviando form...", data);
-  const result = CreateQuestionSchema.safeParse(data);
 
-  if (result.success) {
-    return { success: true, data: result.data };
+  const url = `${BACKEND_URL}/questions`;
+  const requestBody = JSON.stringify(CreateQuestionSchema.parse(data));
+  console.log("requestBody", requestBody);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: requestBody,
+  });
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
   }
-
-  if (result.error) {
-    return { success: false, error: result.error.format() };
-  }
-
-  // const response = await fetch("/api/user/update-name", {
-  //   method: "POST",
-  //   body: formData,
-  // });
-
-  // if (!response.ok) {
-  //   throw new Error(response.statusText);
-  // }
-
-  // return response.json();
+  return response.json();
 }

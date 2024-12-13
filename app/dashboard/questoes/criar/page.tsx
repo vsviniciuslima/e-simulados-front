@@ -7,7 +7,10 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateQuestion, CreateQuestionSchema } from "./formSchema";
+import {
+  CreateQuestion,
+  CreateQuestionSchema,
+} from "../../../../types/questions";
 import { Button } from "@/components/ui/button";
 import Alternatives from "./_components/alternatives";
 import Categories from "./_components/categories";
@@ -15,16 +18,18 @@ import Details from "./_components/details";
 import MainInfo from "./_components/mainInfo";
 import { createQuestion } from "./actions";
 import Images from "./_components/images";
+import { toast } from "sonner";
 
 export default function Dashboard() {
+  // const { toast } = useToast();
   const form = useForm<CreateQuestion>({
     resolver: zodResolver(CreateQuestionSchema),
     defaultValues: {
-      alternatives: [
-        { label: "A", text: "", correct: false },
-        { label: "B", text: "", correct: false },
-        { label: "C", text: "", correct: false },
-        { label: "D", text: "", correct: false },
+      questionAlternatives: [
+        { label: "A", content: "" },
+        { label: "B", content: "" },
+        { label: "C", content: "" },
+        { label: "D", content: "" },
       ],
     },
   });
@@ -32,20 +37,15 @@ export default function Dashboard() {
   const { handleSubmit, reset } = form;
 
   const processForm: SubmitHandler<CreateQuestion> = async (data) => {
-    console.log("Form Data:", data);
-    const result = await createQuestion(data);
-
-    if (!result) {
-      console.log("Erro ao criar questão");
-      return;
-    }
-
-    if (result.error) {
-      console.log(result.error);
-      return;
-    }
-
-    reset();
+    createQuestion(data)
+      .then((res) => {
+        reset();
+        toast("Questão criada com sucesso");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast("Não foi possível criar a questão.");
+      });
   };
 
   return (

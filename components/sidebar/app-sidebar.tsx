@@ -30,8 +30,8 @@ import {
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Professor Daniel",
+    email: "daniel@cursinhodaeach.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -65,7 +65,7 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Support",
+      title: "Suporte",
       url: "#",
       icon: LifeBuoy,
     },
@@ -106,8 +106,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-semibold">
+                    Cursinho da EACH
+                  </span>
+                  <span className="truncate text-xs">Entidade</span>
                 </div>
               </a>
             </SidebarMenuButton>

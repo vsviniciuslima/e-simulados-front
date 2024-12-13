@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Metadata } from "next";
-import { DataTableDemo } from "./_components/demoDataTable";
+import { QuestionsTable } from "./_components/demoDataTable";
 
 export const metadata: Metadata = {
   title: "Questões",
@@ -16,16 +16,16 @@ export const metadata: Metadata = {
 export default function Dashboard() {
   return (
     <div className="flex flex-col sm:gap-4 sm:py-4 w-full">
-      <div className="px-6 py-4">
+      <div className="md:px-6 py-2">
         <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
           Questões
         </h2>
         <p className="text-muted-foreground mt-0">
-          Crie, compartilhe e adicione questões a simulados
+          Crie e adicione questões a simulados
         </p>
       </div>
       {/* <main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 w-full">
-        <DataTableDemo />
+        <QuestionsTable />
       </main> */}
 
       <main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 w-full">
@@ -35,7 +35,7 @@ export default function Dashboard() {
             <CardDescription>Questões disponíveis</CardDescription>
           </CardHeader> */}
         {/* <CardContent> */}
-        <DataTableDemo />
+        <QuestionsTable />
         {/* <ExamsTable /> */}
         {/* </CardContent> */}
         {/* </Card> */}

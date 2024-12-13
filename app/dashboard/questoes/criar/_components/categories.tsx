@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CreateQuestion } from "../formSchema";
+import { CreateQuestion } from "../../../../../types/questions";
+import { getDisciplines, getTopics } from "@/services/commonService";
+import { Discipline, ExamTypeEnum, Topic } from "@/types/common";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+} from "@/components/ui/form";
 
 const subcategoriesMap: Record<
   string,
@@ -24,24 +32,31 @@ const subcategoriesMap: Record<
 };
 
 export default function Categories() {
+  const [disciplines, setDisciplines] = React.useState<Array<Discipline>>([]);
+  const [topics, setTopics] = React.useState<Array<Topic>>([]);
+
+  useEffect(() => {
+    getDisciplines()
+      .then((disciplines: Discipline[]) => {
+        console.log("buscou as disciplinas", disciplines);
+        setDisciplines(disciplines);
+      })
+      .catch((error) => {});
+    getTopics()
+      .then((topics: Topic[]) => {
+        console.log("buscou os tópicos", topics);
+        setTopics(topics);
+      })
+      .catch((error) => {});
+  }, []);
+
+  const form = useFormContext<CreateQuestion>();
   const {
     register,
     formState: { errors },
     watch,
     setValue,
   } = useFormContext<CreateQuestion>();
-
-  const selectedCategory = watch("category");
-
-  // Reset subcategory when category changes
-  const handleCategoryChange = (value: string) => {
-    setValue("category", value);
-    setValue("subcategory", "");
-  };
-
-  const availableSubcategories = selectedCategory
-    ? subcategoriesMap[selectedCategory]
-    : [];
 
   return (
     <Card>
@@ -50,48 +65,86 @@ export default function Categories() {
       </CardHeader>
       <CardContent>
         <div className="grid gap-6 sm:grid-cols-3">
+          <FormField
+            control={form.control}
+            name="examType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tipo de simulado</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {ExamTypeEnum.options.map((type) => {
+                      return (
+                        <SelectItem key={type} value={type}>
+                          {type
+                            .toLowerCase()
+                            .replace(/\b(\w)/g, (x) => x.toUpperCase())}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
           <div className="grid gap-3">
-            <Label htmlFor="category">Categoria</Label>
-            <Select
-              onValueChange={handleCategoryChange}
-              value={selectedCategory}
-              {...register("category")}
-            >
-              <SelectTrigger id="category" aria-label="Selecione uma categoria">
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="human_science">Ciências Humanas</SelectItem>
-                <SelectItem value="exact_science">Ciências Exatas</SelectItem>
-                <SelectItem value="biological_science">
-                  Ciências Biológicas
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <FormField
+              control={form.control}
+              name="disciplineId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Disciplina</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Disciplina" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {disciplines.map((discipline) => (
+                        <SelectItem
+                          key={discipline.id}
+                          value={discipline.id.toString()}
+                        >
+                          {discipline.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
           </div>
 
           <div className="grid gap-3">
-            <Label htmlFor="subcategory">Subcategoria (opcional)</Label>
-            <Select
-              onValueChange={(value) => setValue("subcategory", value)}
-              value={watch("subcategory")}
-              disabled={!selectedCategory}
-              {...register("subcategory")}
-            >
-              <SelectTrigger
-                id="subcategory"
-                aria-label="Selecione uma subcategoria"
-              >
-                <SelectValue placeholder="Selecione uma subcategoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {availableSubcategories.map((sub) => (
-                  <SelectItem key={sub.value} value={sub.value}>
-                    {sub.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <FormField
+              control={form.control}
+              name="topicId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tópico</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Tópico" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {topics.map((topic) => (
+                        <SelectItem key={topic.id} value={topic.id.toString()}>
+                          {topic.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
           </div>
         </div>
       </CardContent>

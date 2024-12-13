@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, TrashIcon } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { CreateQuestion } from "../formSchema";
+import { CreateQuestion } from "../../../../../types/questions";
 import { Textarea } from "@/components/ui/textarea";
 
 const AlternativeRow = ({
@@ -36,6 +36,7 @@ const AlternativeRow = ({
   const {
     register,
     formState: { errors },
+    setValue,
   } = useFormContext<CreateQuestion>();
 
   return (
@@ -43,23 +44,20 @@ const AlternativeRow = ({
       <TableCell className="font-semibold text-center">
         <div
           className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center"
-          {...register(`alternatives.${index}.label`)}
+          {...register(`questionAlternatives.${index}.label`)}
         >
           {label}
         </div>
-        {/* <Button variant="secondary" type="button">
-          {label}
-        </Button> */}
       </TableCell>
       <TableCell>
         <Input
-          {...register(`alternatives.${index}.text`)}
+          {...register(`questionAlternatives.${index}.content`)}
           placeholder={`Texto da alternativa ${label}`}
         />
 
-        {errors.alternatives?.[index]?.text && (
+        {errors.questionAlternatives?.[index]?.content && (
           <span className="text-sm text-red-500">
-            {errors.alternatives[index].text?.message}
+            {errors.questionAlternatives[index].content?.message}
           </span>
         )}
       </TableCell>
@@ -78,17 +76,17 @@ const AlternativeRow = ({
 };
 
 export default function Alternatives() {
-  const { control, watch, setValue } = useFormContext<CreateQuestion>();
+  const { control, watch, setValue, register } =
+    useFormContext<CreateQuestion>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "alternatives",
+    name: "questionAlternatives",
   });
 
   const addAlternative = () => {
     append({
       label: String.fromCharCode(65 + fields.length),
-      text: "",
-      correct: false,
+      content: "",
     });
   };
 
@@ -98,27 +96,23 @@ export default function Alternatives() {
 
     // Sync remaining labels after deletion
     fields.forEach((_, idx) => {
-      setValue(`alternatives.${idx}.label`, String.fromCharCode(65 + idx));
+      setValue("correctAlternative", String.fromCharCode(65 + idx));
+      setValue(
+        `questionAlternatives.${idx}.label`,
+        String.fromCharCode(65 + idx)
+      );
     });
   };
 
   useEffect(() => {
-    // Ensure that labels are in sync whenever alternatives change
+    // Ensure that labels are in sync whenever questionAlternatives change
     fields.forEach((field, index) => {
-      setValue(`alternatives.${index}.label`, String.fromCharCode(65 + index));
+      setValue(
+        `questionAlternatives.${index}.label`,
+        String.fromCharCode(65 + index)
+      );
     });
   }, [fields, setValue]); // Run effect whenever fields change
-
-  const handleCorrectChange = (selectedLabel: string) => {
-    // Update the `correct` value for each alternative based on selection
-    fields.forEach((field, index) => {
-      setValue(`alternatives.${index}.correct`, field.label === selectedLabel);
-    });
-  };
-
-  // Track the current correct alternative
-  const correctAlternative = watch("alternatives")?.find((alt) => alt.correct);
-  const correctValue = correctAlternative?.label || "";
 
   return (
     <div>
@@ -168,8 +162,7 @@ export default function Alternatives() {
               <Label htmlFor="correctAnswer">Alternativa correta</Label>
               <ToggleGroup
                 type="single"
-                value={correctValue}
-                onValueChange={handleCorrectChange}
+                onValueChange={(value) => setValue("correctAlternative", value)}
                 variant="outline"
                 className="mt-1"
               >

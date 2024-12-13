@@ -1,50 +1,5 @@
-import {
-  File,
-  Home,
-  LineChart,
-  ListFilter,
-  Package,
-  Package2,
-  PanelLeft,
-  Search,
-  ShoppingCart,
-  Users2,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExamsTable } from "./_components/examTables";
 import { Metadata } from "next";
+import { ExamsTable } from "./_components/examsTable/examsTable";
 
 export const metadata: Metadata = {
   title: "Simulados",
@@ -54,126 +9,18 @@ export const metadata: Metadata = {
 export default function Dashboard() {
   return (
     <div className="flex flex-col sm:gap-4 sm:py-4 w-full">
-      <div className="px-6 py-4">
+      <div className="md:px-6 py-2">
         <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
           Simulados
         </h2>
         <p className="text-muted-foreground mt-0">
-          Crie, compartilhe e responda simulados
+          Crie e adicione questões a simulados
         </p>
       </div>
+
       <main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 w-full">
-        <Card x-chunk="dashboard-05-chunk-3" className="w-full">
-          <CardHeader className="px-7">
-            <CardTitle>Simulados</CardTitle>
-            <CardDescription>Simulados disponíveis</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ExamsTable />
-          </CardContent>
-        </Card>
+        <ExamsTable />
       </main>
     </div>
   );
 }
-
-const CardSeusSimulados = () => (
-  <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
-    <CardHeader className="pb-3">
-      <CardTitle>Seus simulados</CardTitle>
-      <CardDescription className="text-balance max-w-lg leading-relaxed">
-        Crie, compartilhe e responda simulados.
-      </CardDescription>
-    </CardHeader>
-    <CardFooter>
-      <Button>Criar simulado</Button>
-    </CardFooter>
-  </Card>
-);
-
-const CardEssaSemana = () => (
-  <Card x-chunk="dashboard-05-chunk-1">
-    <CardHeader className="pb-2">
-      <CardDescription>Essa Semana</CardDescription>
-      <CardTitle className="text-4xl">5</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="text-xs text-muted-foreground">+30% da última semana</div>
-    </CardContent>
-    <CardFooter>
-      <Progress value={25} aria-label="25% increase" />
-    </CardFooter>
-  </Card>
-);
-
-const CardEsseMes = () => (
-  <Card x-chunk="dashboard-05-chunk-2">
-    <CardHeader className="pb-2">
-      <CardDescription>Esse Mês</CardDescription>
-      <CardTitle className="text-4xl">27</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="text-xs text-muted-foreground">+10% do último mês</div>
-    </CardContent>
-    <CardFooter>
-      <Progress value={12} aria-label="12% increase" />
-    </CardFooter>
-  </Card>
-);
-
-const SheetNavigation = () => (
-  <Sheet>
-    <SheetTrigger asChild>
-      <Button size="icon" variant="outline" className="sm:hidden">
-        <PanelLeft className="h-5 w-5" />
-        <span className="sr-only">Toggle Menu</span>
-      </Button>
-    </SheetTrigger>
-    <SheetContent side="left" className="sm:max-w-xs">
-      <nav className="grid gap-6 text-lg font-medium">
-        <Link
-          href="#"
-          className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-        >
-          <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-          <span className="sr-only">Acme Inc</span>
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-        >
-          <Home className="h-5 w-5" />
-          Dashboard
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-4 px-2.5 text-foreground"
-        >
-          <ShoppingCart className="h-5 w-5" />
-          Orders
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-        >
-          <Package className="h-5 w-5" />
-          Products
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-        >
-          <Users2 className="h-5 w-5" />
-          Customers
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-        >
-          <LineChart className="h-5 w-5" />
-          Settings
-        </Link>
-      </nav>
-    </SheetContent>
-  </Sheet>
-);
