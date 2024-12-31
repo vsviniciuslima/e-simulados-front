@@ -34,8 +34,8 @@ export const CreateQuestionSchema = z.object({
     .string()
     .min(1, { message: "O enunciado da prova é obrigatório." }), // Required statement
   description: z.string().optional(), // Optional explanation
-  disciplineId: z.coerce.number(), // Required topic
-  topicId: z.coerce.number(), // Required sub-topic
+  disciplineId: z.coerce.number().optional(), // Required topic
+  topicId: z.coerce.number().optional(), // Required sub-topic
   examType: ExamTypeEnum, // Required exam type
   year: z.number().int().optional(), // Optional integer year
   source: z.string().optional(), // Optional source

@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useFormContext } from "react-hook-form";
 import { CreateQuestion } from "../../../../../types/questions";
+import Editor from "./editor";
 
 export default function MainInfo() {
   const {
@@ -27,27 +28,12 @@ export default function MainInfo() {
         <div className="grid gap-6">
           <div className="grid gap-3">
             <Label htmlFor="statement">Enunciado</Label>
-            <Input
-              id="statement"
-              type="text"
-              className="w-full"
-              placeholder="Enunciado da questão"
-              {...register("statement")}
-            />
+            <Editor />
             {errors.statement && (
               <span className="text-sm text-red-500">
                 {errors.statement.message}
               </span>
             )}
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="description">Descrição</Label>
-            <Textarea
-              {...register("description")}
-              id="description"
-              placeholder="Descrição detalhada da questão"
-              className="min-h-32"
-            />
           </div>
         </div>
       </CardContent>
