@@ -1,24 +1,25 @@
-"use client";
+'use client';
 import {
   getExam,
   getExamAttempt,
   getExamAttempts,
-} from "@/services/examService";
-import { getQuestion } from "@/services/questionsService";
-import { Exam, ExamAttempt, ExamAttemptResponse } from "@/types/exams";
-import { Question, QuestionAlternative } from "@/types/questions";
-import { useParams } from "next/navigation";
-import React from "react";
-import { QuestionBody } from "../../questoes/_components/questionDetails";
-import { ExamDetails } from "../../simulados/resolver/page";
+} from '@/services/examService';
+import { getQuestion } from '@/services/questionsService';
+import { Exam, ExamAttempt, ExamAttemptResponse } from '@/types/exams';
+import { Question, QuestionAlternative } from '@/types/questions';
+import { useParams } from 'next/navigation';
+import React from 'react';
+import { QuestionBody } from '../../questoes/_components/questionDetails';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { CircleCheckIcon, CircleXIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/accordion';
+import { CircleCheckIcon, CircleXIcon } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ExamDetails } from '../../simulados/resolver/_components/examDetails';
+import { toast } from 'sonner';
 
 export default function Page() {
   const { id } = useParams() as { id: string };
@@ -33,7 +34,7 @@ export default function Page() {
   React.useEffect(() => {
     getExamAttempt(Number(id))
       .then((attempt: ExamAttemptResponse) => {
-        console.log("buscou as tentativas", attempt);
+        console.log('buscou as tentativas', attempt);
         setAttempts(attempt);
         const questionIds = attempt.answers.map((answer) => answer.questionId);
         const uniqueQuestionIds = Array.from(new Set(questionIds));
@@ -70,13 +71,13 @@ export default function Page() {
       <Accordion type="single" collapsible className="w-full p-2">
         {attempt.answers.map((attempt, index) => {
           const question = questions.find(
-            (question) => question.id === attempt.questionId
+            (question) => question.id === attempt.questionId,
           );
           const correctAlternative = question?.alternatives.find(
-            (alternative) => alternative.label === question.correctAlternative
+            (alternative) => alternative.label === question.correctAlternative,
           );
           const userAlternative = question?.alternatives.find(
-            (alternative) => alternative.label === attempt.alternativeId
+            (alternative) => alternative.label === attempt.alternativeId,
           );
 
           const isCorrect =
@@ -119,7 +120,7 @@ export default function Page() {
                           Alternativa correta
                         </p>
                         <Badge variant="outline">
-                          {userAlternative?.label}{" "}
+                          {userAlternative?.label}{' '}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">

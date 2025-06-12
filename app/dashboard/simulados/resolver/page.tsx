@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
@@ -10,27 +10,59 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
-import { attemptExam, getExam } from "@/services/examService";
-import { Question } from "@/types/questions";
+} from '@/components/ui/pagination';
+import { attemptExam, getExam } from '@/services/examService';
+import { Question } from '@/types/questions';
 import {
   Exam,
   ExamAttempt,
   ExamAttemptResponse,
   ExamAttemptSchema,
-} from "@/types/exams";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Book } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+} from '@/types/exams';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Book,
+  ChevronsDown,
+  ChevronsLeft,
+  ChevronsRight,
+  ChevronsUp,
+  ClipboardList,
+  BookOpen,
+  Layers,
+  Calendar,
+  Tag,
+  BadgeInfoIcon,
+} from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import {
   FormProvider,
   SubmitHandler,
   useForm,
   useFormContext,
-} from "react-hook-form";
-import { toast } from "sonner";
-import { QuestionComponent } from "./_components/questionComponent/page";
+} from 'react-hook-form';
+import { toast } from 'sonner';
+import { QuestionComponent } from './_components/questionComponent';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
+import { Progress } from '@/components/ui/progress';
+import { questions } from '@/types/data';
+import CollapsibleHeader from './_components/collapsableHeader';
+import { ExamDetails } from './_components/examDetails';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 
 // export const metadata: Metadata = {
 //   title: "Simulados",
@@ -41,31 +73,35 @@ export default function Dashboard() {
   const router = useRouter();
   const [exam, setExam] = useState<Exam | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(true);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = searchParams.get('id');
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const form = useForm<ExamAttempt>({
     resolver: zodResolver(ExamAttemptSchema),
+    mode: 'onChange',
     defaultValues: {
       examId: Number(id),
+      answers: [],
     },
   });
 
-  // form.setValue("examId", Number(id));
+  const { handleSubmit, reset, watch } = form;
 
-  const { handleSubmit, reset } = form;
   const handleExamAttempt: SubmitHandler<ExamAttempt> = async (data) => {
-    console.log("Form Data:", data);
+    console.log('Form Data:', data);
     attemptExam(Number(id), data.answers).then((response) => {
       if (response as ExamAttemptResponse) {
-        toast("Tentativa de simulado enviada.");
-        console.log("Response de tentativa de simulado:", response);
+        toast('Tentativa de simulado enviada.');
+        console.log('Response de tentativa de simulado:', response);
         reset();
         router.push(`/dashboard/tentativas/${response.id}`);
       } else {
-        toast("Erro ao enviar tentativa de simulado.");
+        toast('Erro ao enviar tentativa de simulado.');
       }
-      console.log("Response:", response);
+      console.log('Response:', response);
     });
   };
 
@@ -73,8 +109,8 @@ export default function Dashboard() {
     if (id !== null) {
       getExam(Number(id))
         .then((data: Exam) => {
-          console.log("buscou os exames", data);
-          console.log("questions:", data.questions);
+          console.log('buscou os exames', data);
+          console.log('questions:', data.questions);
           setExam(data);
           setLoading(false);
         })
@@ -83,6 +119,49 @@ export default function Dashboard() {
         });
     }
   }, [id]);
+
+  const handlePreviousQuestion = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top smoothly
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top smoothly
+    if (exam && currentQuestionIndex < exam.questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      setCurrentQuestionIndex(currentQuestionIndex);
+    }
+  };
+
+  const allQuestionsAnswered = () => {
+    const answers = watch('answers');
+    return exam?.questions.every(
+      (_, index) => answers[index] && answers[index].alternativeId !== null,
+    );
+  };
+
+  const calculateProgress = () => {
+    console.log('questions do calculateProgress:', exam?.questions);
+    const answers = watch('answers');
+    const answeredQuestions =
+      exam?.questions.filter(
+        (_, index) =>
+          answers[index] &&
+          answers[index].alternativeId !== null &&
+          answers[index].alternativeId !== undefined,
+      ).length || 0;
+    const initialProgress =
+      (answeredQuestions / (exam?.questions.length || 1)) * 100;
+    console.log('answers:', answers);
+    console.log('answered questions:', answeredQuestions);
+    console.log('initialProgress:', initialProgress);
+    return initialProgress;
+  };
+
+  const progressValue = calculateProgress();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -95,73 +174,87 @@ export default function Dashboard() {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(handleExamAttempt)}>
-        <div className="flex flex-col sm:gap-4 sm:py-4 w-full">
-          <div className="px-2 py-4">
-            <div className="flex space-x-1">
-              <div className="flex items-center">
-                <Book className="h-6 w-6" />
-              </div>
-              <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0 capitalize">
-                {exam.name}
-              </h1>
-            </div>
-            <div className="my-1">
-              <div className="flex space-x-2">
-                <h4 className="font-semibold scroll-m-20">Categoria</h4>
-                <div className="text-muted-foreground">{exam.examType}</div>
-              </div>
-
-              {exam.discipline && (
-                <div className="flex space-x-2">
-                  <h4 className="font-semibold scroll-m-20">Disciplina</h4>
-                  <p className="text-muted-foreground capitalize">
-                    {exam.discipline.name}
-                  </p>
-                </div>
-              )}
-              {exam.topic && (
-                <div className="flex space-x-2">
-                  <h4 className="font-semibold scroll-m-20">Tópico</h4>
-                  <p className="text-muted-foreground capitalize">
-                    {exam.topic.name}
-                  </p>
-                </div>
-              )}
-              {exam.year && (
-                <div className="flex">
-                  <h4 className="font-semibold scroll-m-20">Ano</h4>
-                  <p className="pl-2 text-muted-foreground">{exam.year}</p>
-                </div>
-              )}
-              <div className="flex my-2 space-x-2">
-                <h4 className="font-semibold scroll-m-20">Tags</h4>
-                {exam.tags?.map((tag) => {
-                  return (
-                    <Badge variant={"outline"} key={tag}>
-                      {tag}
-                    </Badge>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-          <main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 w-full px-2">
-            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-2">
-              Questões
-            </h3>
-            {exam.questions.map((question: Question, index: number) => (
-              <QuestionComponent
-                key={question.id}
-                question={question}
-                index={index}
+        <div className="flex flex-col sm:gap-4 sm:py-4 w-full h-full">
+          {/* <div className="rounded-md border px-2 py-2 mb-3">
+            <Collapsible
+              open={isCollapsibleOpen}
+              onOpenChange={setIsCollapsibleOpen}
+              className="p-2 ease-out duration-1000"
+            >
+              <CollapsibleHeader
+                examName={exam.name}
+                isCollapsibleOpen={isCollapsibleOpen}
+                toggleCollapsible={() =>
+                  setIsCollapsibleOpen(!isCollapsibleOpen)
+                }
               />
-            ))}
-            <div>
-              <PaginationComponent />
-            </div>
+              <CollapsibleContent
+                className={cn(
+                  'space-y-2 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+                )}
+              >
+                <ExamDetails exam={exam} />
+              </CollapsibleContent>
+            </Collapsible>
+          </div> */}
+          <main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 w-full px-2 h-full">
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button variant="outline" className="flex space-x-1">
+                  {' '}
+                  <BadgeInfoIcon className="h-4 w-4" /> Detalhes do simulado
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="mx-auto w-full max-w-sm">
+                  <DrawerHeader>
+                    <DrawerTitle>Detalhes do simulado</DrawerTitle>
+                    <DrawerDescription>
+                      Informações detalhadas do simulado
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <ExamDetails exam={exam} />
+                  <DrawerFooter>
+                    <DrawerClose asChild>
+                      <Button variant="outline">Fechar</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </div>
+              </DrawerContent>
+            </Drawer>
+            <QuestionComponent
+              key={exam.questions[currentQuestionIndex].id}
+              question={exam.questions[currentQuestionIndex]}
+              index={currentQuestionIndex}
+            />
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious onClick={handlePreviousQuestion} />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink isActive>
+                    {currentQuestionIndex + 1}
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext onClick={handleNextQuestion} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
             <div className="flex justify-end space-x-2 my-2">
-              <Button variant={"outline"}>Salvar Rascunho</Button>
-              <Button type="submit" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full relative overflow-hidden"
+                // disabled={loading || !allQuestionsAnswered()}
+                style={{
+                  background: `linear-gradient(to right, var(--primary) ${progressValue}%, white ${progressValue}%)`,
+                  color: progressValue > 50 ? 'white' : 'black', // Adjust text color based on progress
+                }}
+              >
                 Enviar
               </Button>
             </div>
@@ -172,89 +265,6 @@ export default function Dashboard() {
     </FormProvider>
   );
 }
-
-export function ExamDetails({ exam }: { exam: Exam }) {
-  return (
-    <div className="px-2 py-4">
-      <div className="flex space-x-1">
-        <div className="flex items-center">
-          <Book className="h-6 w-6" />
-        </div>
-        <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0 capitalize">
-          {exam.name}
-        </h1>
-      </div>
-      <div className="my-1">
-        <div className="flex space-x-2">
-          <h4 className="font-semibold scroll-m-20">Categoria</h4>
-          <div className="text-muted-foreground">{exam.examType}</div>
-        </div>
-
-        {exam.discipline && (
-          <div className="flex space-x-2">
-            <h4 className="font-semibold scroll-m-20">Disciplina</h4>
-            <p className="text-muted-foreground capitalize">
-              {exam.discipline.name}
-            </p>
-          </div>
-        )}
-        {exam.topic && (
-          <div className="flex space-x-2">
-            <h4 className="font-semibold scroll-m-20">Tópico</h4>
-            <p className="text-muted-foreground capitalize">
-              {exam.topic.name}
-            </p>
-          </div>
-        )}
-        {exam.year && (
-          <div className="flex">
-            <h4 className="font-semibold scroll-m-20">Ano</h4>
-            <p className="pl-2 text-muted-foreground">{exam.year}</p>
-          </div>
-        )}
-        <div className="flex my-2 space-x-2">
-          <h4 className="font-semibold scroll-m-20">Tags</h4>
-          {exam.tags?.map((tag) => {
-            return (
-              <Badge variant={"outline"} key={tag}>
-                {tag}
-              </Badge>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const PaginationComponent = () => {
-  return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious href="#" />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            1
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">2</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
-  );
-};
 
 const FormErrors: React.FC = () => {
   const {
